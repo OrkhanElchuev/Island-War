@@ -26,6 +26,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     [Header("Inside Room UI Panel")]
     public GameObject insideRoomPanel;
+    public Text roomInfoText;
 
     [Header("Room List UI Panel")]
     public GameObject roomListPanel;
@@ -251,6 +252,9 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
         Debug.Log(PhotonNetwork.LocalPlayer.NickName + " has joined to " + PhotonNetwork.CurrentRoom.Name);
         ActivatePanel(insideRoomPanel.name);
+        // Assign room name, player count and max palyer amount to Room Information field
+        roomInfoText.text = "Room name: " + PhotonNetwork.CurrentRoom.Name + " " +
+         PhotonNetwork.CurrentRoom.PlayerCount + " / " + PhotonNetwork.CurrentRoom.MaxPlayers;
     }
 
     #endregion
