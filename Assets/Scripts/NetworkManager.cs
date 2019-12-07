@@ -42,6 +42,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     private Dictionary<string, RoomInfo> cachedRoomList;
     private Dictionary<string, GameObject> roomListGameObjects;
+    private Dictionary<int, GameObject> playerListGameObjects;
 
     // ----------------------------------------------------------------------------- //
 
@@ -258,26 +259,75 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         roomInfoText.text = "Room name: " + PhotonNetwork.CurrentRoom.Name + " " +
          PhotonNetwork.CurrentRoom.PlayerCount + " / " + PhotonNetwork.CurrentRoom.MaxPlayers;
 
+        if (playerListGameObjects == null)
+        {
+            playerListGameObjects = new Dictionary<int, GameObject>();
+        }
+
         // Instantiate player list game objects
         foreach (Player player in PhotonNetwork.PlayerList)
         {
-            GameObject playerListGameObject = Instantiate(playerListPrefab);
+            GameObject playerListSingleGameObject = Instantiate(playerListPrefab);
             // Put newly instantiated player objects under Parent object for better arrangement
-            playerListGameObject.transform.SetParent(playerListParent.transform);
+            playerListSingleGameObject.transform.SetParent(playerListParent.transform);
             // Avoid scaling issues
-            playerListGameObject.transform.localScale = Vector3.one;
+            playerListSingleGameObject.transform.localScale = Vector3.one;
             // Set player name field to relevant value
-            playerListGameObject.transform.Find("PlayerNameText").GetComponent<Text>().text = player.NickName;
+            playerListSingleGameObject.transform.Find("PlayerNameText").GetComponent<Text>().text = player.NickName;
             // Check if this player is "myself" by checking identified of player in current room
             if (player.ActorNumber == PhotonNetwork.LocalPlayer.ActorNumber)
             {
-                playerListGameObject.transform.Find("PlayerIndicator").gameObject.SetActive(true);
+                playerListSingleGameObject.transform.Find("PlayerIndicator").gameObject.SetActive(true);
             }
             else
             {
-                playerListGameObject.transform.Find("PlayerIndicator").gameObject.SetActive(false);
+                playerListSingleGameObject.transform.Find("PlayerIndicator").gameObject.SetActive(false);
             }
+            playerListGameObjects.Add(player.ActorNumber, playerListSingleGameObject);
         }
+    }
+
+    // Called when new remote player joins the same room we are in
+    public override void OnPlayerEnteredRoom(Player newPlayer)
+    {
+        GameObject playerListSingleGameObject = Instantiate(playerListPrefab);
+        // Put newly instantiated player objects under Parent object for better arrangement
+        playerListSingleGameObject.transform.SetParent(playerListParent.transform);
+        // Avoid scaling issues
+        playerListSingleGameObject.transform.localScale = Vector3.one;
+        // Set player name field to relevant value
+        playerListSingleGameObject.transform.Find("PlayerNameText").GetComponent<Text>().text = newPlayer.NickName;
+        // Check if this player is "myself" by checking identified of player in current room
+        if (newPlayer.ActorNumber == PhotonNetwork.LocalPlayer.ActorNumber)
+        {
+            playerListSingleGameObject.transform.Find("PlayerIndicator").gameObject.SetActive(true);
+        }
+        else
+        {
+            playerListSingleGameObject.transform.Find("PlayerIndicator").gameObject.SetActive(false);
+        }
+        playerListGameObjects.Add(newPlayer.ActorNumber, playerListSingleGameObject);
+    }
+
+    // Called when player leaves the room we are in
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        Destroy(playerListGameObjects[otherPlayer.ActorNumber].gameObject);
+        playerListGameObjects.Remove(otherPlayer.ActorNumber);
+    }
+
+    // In case we leave the room
+    public override void OnLeftRoom()
+    {
+        ActivatePanel(gameOptionsPanel.name);
+        // Destroy every player game object
+        foreach (GameObject playerListSingleGameObject in playerListGameObjects.Values)
+        {
+            Destroy(playerListSingleGameObject);
+        }
+        // Clear player list 
+        playerListGameObjects.Clear();
+        playerListGameObjects = null;
     }
 
     #endregion
