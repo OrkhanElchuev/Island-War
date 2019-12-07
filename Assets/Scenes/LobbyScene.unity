@@ -126,6 +126,12 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 2237909153749735978}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &135752107 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2237909153553351825, guid: a46be2be188dde04a928c41bf785abce,
+    type: 3}
+  m_PrefabInstance: {fileID: 2237909153749735978}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &395628122 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2237909153852072231, guid: a46be2be188dde04a928c41bf785abce,
@@ -472,6 +478,11 @@ PrefabInstance:
       propertyPath: playerListParent
       value: 
       objectReference: {fileID: 775870186}
+    - target: {fileID: 5710258202475754656, guid: 7082780ffd4fdce45bc839a5ed4baf60,
+        type: 3}
+      propertyPath: startGameButton
+      value: 
+      objectReference: {fileID: 135752107}
     - target: {fileID: 6238650306228412522, guid: 7082780ffd4fdce45bc839a5ed4baf60,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -575,6 +586,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2237909153427727188, guid: a46be2be188dde04a928c41bf785abce,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1455291477}
+    - target: {fileID: 2237909153427727188, guid: a46be2be188dde04a928c41bf785abce,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnLeaveGameButtonClicked
       objectReference: {fileID: 0}
     - target: {fileID: 2237909154190204094, guid: a46be2be188dde04a928c41bf785abce,
         type: 3}

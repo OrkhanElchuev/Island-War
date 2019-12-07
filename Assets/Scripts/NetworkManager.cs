@@ -166,6 +166,12 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         }
     }
 
+    // Leave Game button is located in the InsideRoomPanel
+    public void OnLeaveGameButtonClicked()
+    {
+        PhotonNetwork.LeaveRoom();
+    }
+
     // Room List button located in GameOptionsPanel
     public void OnShowRoomListButtonClicked()
     {
@@ -336,6 +342,12 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         // Destroy and remove player game object
         Destroy(playerListGameObjects[otherPlayer.ActorNumber].gameObject);
         playerListGameObjects.Remove(otherPlayer.ActorNumber);
+
+        // If creator of a room left the game, then the next player becomes a leader of a room
+        if (PhotonNetwork.LocalPlayer.IsMasterClient)
+        {
+            startGameButton.SetActive(true);
+        }
     }
 
     // In case we leave the room
