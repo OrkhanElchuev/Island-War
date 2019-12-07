@@ -38,6 +38,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     // Private 
 
     private Dictionary<string, RoomInfo> cachedRoomList;
+    private Dictionary<string, GameObject> roomListGameObjects;
 
     // ----------------------------------------------------------------------------- //
 
@@ -48,6 +49,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
         ActivatePanel(loginPanel.name);
         cachedRoomList = new Dictionary<string, RoomInfo>();
+        roomListGameObjects = new Dictionary<string, GameObject>();
     }
 
     // Update is called once per frame
@@ -61,8 +63,18 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     #region Private Methods
 
+    private void ClearRoomList()
+    {
+        // Destroy every game object in room list
+        foreach (var roomListObject in roomListGameObjects.Values)
+        {
+            Destroy(roomListObject);
+        }
+        roomListGameObjects.Clear();
+    }
+
     // Join room button located inside RoomListPrefab
-    void OnJoinedRoomButtonClicked(string roomName)
+    private void OnJoinedRoomButtonClicked(string roomName)
     {
         // At this stage we do not need to stay in lobby
         if (PhotonNetwork.InLobby)
@@ -90,6 +102,17 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     #endregion
 
     #region UI Callbacks
+
+    // Back button located in the RoomListPanel
+    public void OnBackButtonClicked()
+    {
+        // At this stage we do not need to stay in lobby
+        if (PhotonNetwork.InLobby)
+        {
+            PhotonNetwork.LeaveLobby();
+        }
+        ActivatePanel(gameOptionsPanel.name);
+    }
 
     // Create Room button located in the CreateRoomPanel
     public void OnRoomCreateButtonClicked()
@@ -161,6 +184,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     // Called for any update of the room-listing while in a lobby on the Master Server
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {
+        ClearRoomList();
+
         foreach (RoomInfo room in roomList)
         {
             Debug.Log(room.Name);
@@ -187,22 +212,32 @@ public class NetworkManager : MonoBehaviourPunCallbacks
                 }
             }
         }
+
         // Instantiate game object roomListPrefab
         foreach (RoomInfo room in cachedRoomList.Values)
         {
-            GameObject roomListGameObject = Instantiate(roomListPrefab);
+            GameObject roomListSingleGameObject = Instantiate(roomListPrefab);
             // Put newly instantiated roomListObjects under Parent object for better arrangement
-            roomListGameObject.transform.SetParent(roomListParentGameObject.transform);
+            roomListSingleGameObject.transform.SetParent(roomListParentGameObject.transform);
             // Avoid scaling issues
-            roomListGameObject.transform.localScale = Vector3.one;
+            roomListSingleGameObject.transform.localScale = Vector3.one;
             // Set name and player amount of a room 
-            roomListGameObject.transform.Find("RoomNameText").GetComponent<Text>().text = room.Name;
-            roomListGameObject.transform.Find("RoomPlayersText").GetComponent<Text>().text = room.PlayerCount + 
+            roomListSingleGameObject.transform.Find("RoomNameText").GetComponent<Text>().text = room.Name;
+            roomListSingleGameObject.transform.Find("RoomPlayersText").GetComponent<Text>().text = room.PlayerCount +
             " / " + room.MaxPlayers;
             // Join relevant room 
-            roomListGameObject.transform.Find("JoinRoomButton").GetComponent<Button>().onClick.AddListener(() 
+            roomListSingleGameObject.transform.Find("JoinRoomButton").GetComponent<Button>().onClick.AddListener(()
             => OnJoinedRoomButtonClicked(room.Name));
+            // Add room with its name and object to the room list
+            roomListGameObjects.Add(room.Name, roomListSingleGameObject);
         }
+    }
+
+    // Get rid of redundant data on the background after leaving lobby
+    public override void OnLeftLobby()
+    {
+        ClearRoomList();
+        cachedRoomList.Clear();
     }
 
     // Called when this client created a room and entered it (OnJoinedRoom is being called as well)

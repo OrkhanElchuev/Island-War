@@ -53,3 +53,6 @@ MonoBehaviour:
   insideRoomPanel: {fileID: 0}
   roomListPanel: {fileID: 0}
   joinRandomRoomPanel: {fileID: 0}
+  roomListPrefab: {fileID: 841278376669109242, guid: 1b50ba566761f6c42bf8b3c775911a8d,
+    type: 3}
+  roomListParentGameObject: {fileID: 0}
