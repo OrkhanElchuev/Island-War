@@ -44,4 +44,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerNameInput: {fileID: 0}
+  loginPanel: {fileID: 0}
   connectionStatusText: {fileID: 0}
+  gameOptionsPanel: {fileID: 0}
+  createRoomPanel: {fileID: 0}
+  insideRoomPanel: {fileID: 0}
+  roomListPanel: {fileID: 0}
+  joinRandomRoomPanel: {fileID: 0}
