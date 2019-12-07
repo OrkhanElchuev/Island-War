@@ -27,6 +27,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     [Header("Inside Room UI Panel")]
     public GameObject insideRoomPanel;
     public Text roomInfoText;
+    public GameObject playerListPrefab;
+    public GameObject playerListParent;
 
     [Header("Room List UI Panel")]
     public GameObject roomListPanel;
@@ -218,7 +220,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         foreach (RoomInfo room in cachedRoomList.Values)
         {
             GameObject roomListSingleGameObject = Instantiate(roomListPrefab);
-            // Put newly instantiated roomListObjects under Parent object for better arrangement
+            // Put newly instantiated room objects under Parent object for better arrangement
             roomListSingleGameObject.transform.SetParent(roomListParentGameObject.transform);
             // Avoid scaling issues
             roomListSingleGameObject.transform.localScale = Vector3.one;
@@ -255,6 +257,27 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         // Assign room name, player count and max palyer amount to Room Information field
         roomInfoText.text = "Room name: " + PhotonNetwork.CurrentRoom.Name + " " +
          PhotonNetwork.CurrentRoom.PlayerCount + " / " + PhotonNetwork.CurrentRoom.MaxPlayers;
+
+        // Instantiate player list game objects
+        foreach (Player player in PhotonNetwork.PlayerList)
+        {
+            GameObject playerListGameObject = Instantiate(playerListPrefab);
+            // Put newly instantiated player objects under Parent object for better arrangement
+            playerListGameObject.transform.SetParent(playerListParent.transform);
+            // Avoid scaling issues
+            playerListGameObject.transform.localScale = Vector3.one;
+            // Set player name field to relevant value
+            playerListGameObject.transform.Find("PlayerNameText").GetComponent<Text>().text = player.NickName;
+            // Check if this player is "myself" by checking identified of player in current room
+            if (player.ActorNumber == PhotonNetwork.LocalPlayer.ActorNumber)
+            {
+                playerListGameObject.transform.Find("PlayerIndicator").gameObject.SetActive(true);
+            }
+            else
+            {
+                playerListGameObject.transform.Find("PlayerIndicator").gameObject.SetActive(false);
+            }
+        }
     }
 
     #endregion
