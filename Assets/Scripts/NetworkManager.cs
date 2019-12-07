@@ -7,6 +7,8 @@ using Photon.Realtime;
 
 public class NetworkManager : MonoBehaviourPunCallbacks
 {
+    // Public  
+
     [Header("Login UI Panel")]
     public InputField playerNameInput;
     public GameObject loginPanel;
@@ -30,6 +32,14 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     [Header("Join Random Room UI Panel")]
     public GameObject joinRandomRoomPanel;
+    public GameObject roomListPrefab;
+    public GameObject roomListParentGameObject;
+
+    // Private 
+
+    private Dictionary<string, RoomInfo> cachedRoomList;
+
+    // ----------------------------------------------------------------------------- //
 
     #region Unity Methods
 
@@ -37,6 +47,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     void Start()
     {
         ActivatePanel(loginPanel.name);
+        cachedRoomList = new Dictionary<string, RoomInfo>();
     }
 
     // Update is called once per frame
@@ -50,6 +61,16 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     #region Private Methods
 
+    // Join room button located inside RoomListPrefab
+    void OnJoinedRoomButtonClicked(string roomName)
+    {
+        // At this stage we do not need to stay in lobby
+        if (PhotonNetwork.InLobby)
+        {
+            PhotonNetwork.LeaveLobby();
+        }
+        PhotonNetwork.JoinRoom(roomName);
+    }
 
     #endregion
 
@@ -70,6 +91,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     #region UI Callbacks
 
+    // Create Room button located in the CreateRoomPanel
     public void OnRoomCreateButtonClicked()
     {
         string roomName = roomNameInput.text;
@@ -85,12 +107,13 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         PhotonNetwork.CreateRoom(roomName, roomOptions);
     }
 
-    // Cancel button which is located on CreateRoomPanel
+    // Cancel button located in the CreateRoomPanel
     public void OnCancelButtonClicked()
     {
         ActivatePanel(gameOptionsPanel.name);
     }
 
+    // Login button located in the LoginPanel
     public void OnLoginButtonClicked()
     {
         string playerName = playerNameInput.text;
@@ -105,6 +128,17 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         {
             Debug.Log("Player name is invalid!");
         }
+    }
+
+    // Room List button located in GameOptionsPanel
+    public void OnShowRoomListButtonClicked()
+    {
+        // Must be in lobby to see the existing rooms list
+        if (!PhotonNetwork.InLobby)
+        {
+            PhotonNetwork.JoinLobby();
+        }
+        ActivatePanel(roomListPanel.name);
     }
 
     #endregion
@@ -122,6 +156,53 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
         Debug.Log(PhotonNetwork.LocalPlayer.NickName + " is connected to Photon server");
         ActivatePanel(gameOptionsPanel.name);
+    }
+
+    // Called for any update of the room-listing while in a lobby on the Master Server
+    public override void OnRoomListUpdate(List<RoomInfo> roomList)
+    {
+        foreach (RoomInfo room in roomList)
+        {
+            Debug.Log(room.Name);
+            // Remove the lists that are closed, invisible or removed from the list
+            // RemovedFromList is true when the room is hidden, closed or full
+            if (!room.IsOpen || !room.IsVisible || room.RemovedFromList)
+            {
+                if (cachedRoomList.ContainsKey(room.Name))
+                {
+                    cachedRoomList.Remove(room.Name);
+                }
+            }
+            else
+            {
+                // Update cached room list
+                if (cachedRoomList.ContainsKey(room.Name))
+                {
+                    cachedRoomList[room.Name] = room;
+                }
+                // Add the new room to the cached room list
+                else
+                {
+                    cachedRoomList.Add(room.Name, room);
+                }
+            }
+        }
+        // Instantiate game object roomListPrefab
+        foreach (RoomInfo room in cachedRoomList.Values)
+        {
+            GameObject roomListGameObject = Instantiate(roomListPrefab);
+            // Put newly instantiated roomListObjects under Parent object for better arrangement
+            roomListGameObject.transform.SetParent(roomListParentGameObject.transform);
+            // Avoid scaling issues
+            roomListGameObject.transform.localScale = Vector3.one;
+            // Set name and player amount of a room 
+            roomListGameObject.transform.Find("RoomNameText").GetComponent<Text>().text = room.Name;
+            roomListGameObject.transform.Find("RoomPlayersText").GetComponent<Text>().text = room.PlayerCount + 
+            " / " + room.MaxPlayers;
+            // Join relevant room 
+            roomListGameObject.transform.Find("JoinRoomButton").GetComponent<Button>().onClick.AddListener(() 
+            => OnJoinedRoomButtonClicked(room.Name));
+        }
     }
 
     // Called when this client created a room and entered it (OnJoinedRoom is being called as well)
