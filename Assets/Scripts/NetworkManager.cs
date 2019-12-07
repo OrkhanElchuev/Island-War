@@ -8,6 +8,10 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 {
     [Header("Login UI")]
     public InputField playerNameInput;
+    
+    [Header("Connection Status")]
+    public Text connectionStatusText;
+
 
     #region Unity Methods
 
@@ -20,7 +24,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     // Update is called once per frame
     void Update()
     {
-
+        // Display connection status
+        connectionStatusText.text = "Connection status : " + PhotonNetwork.NetworkClientState;
     }
 
     #endregion
