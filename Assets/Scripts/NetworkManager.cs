@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
+using Photon.Realtime;
 
 public class NetworkManager : MonoBehaviourPunCallbacks
 {
@@ -18,6 +19,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     [Header("Create Room UI Panel")]
     public GameObject createRoomPanel;
+    public InputField roomNameInput;
+    public InputField maxPlayerAmountInput;
 
     [Header("Inside Room UI Panel")]
     public GameObject insideRoomPanel;
@@ -67,6 +70,27 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     #region UI Callbacks
 
+    public void OnRoomCreateButtonClicked()
+    {
+        string roomName = roomNameInput.text;
+        // If room name field is empty generate a random room name E.g. Room 324
+        if (string.IsNullOrEmpty(roomName))
+        {
+            roomName = "Room " + Random.Range(1, 1000);
+        }
+        // Set room configurations
+        RoomOptions roomOptions = new RoomOptions();
+        roomOptions.MaxPlayers = (byte)int.Parse(maxPlayerAmountInput.text);
+        // Create room on a server
+        PhotonNetwork.CreateRoom(roomName, roomOptions);
+    }
+
+    // Cancel button which is located on CreateRoomPanel
+    public void OnCancelButtonClicked()
+    {
+        ActivatePanel(gameOptionsPanel.name);
+    }
+
     public void OnLoginButtonClicked()
     {
         string playerName = playerNameInput.text;
@@ -97,8 +121,20 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public override void OnConnectedToMaster()
     {
         Debug.Log(PhotonNetwork.LocalPlayer.NickName + " is connected to Photon server");
-        // Activating game options panel after successfull connection to the Photon server
         ActivatePanel(gameOptionsPanel.name);
+    }
+
+    // Called when this client created a room and entered it (OnJoinedRoom is being called as well)
+    public override void OnCreatedRoom()
+    {
+        Debug.Log(PhotonNetwork.CurrentRoom.Name + " is created");
+    }
+
+    // Called when any client joined an existing room 
+    public override void OnJoinedRoom()
+    {
+        Debug.Log(PhotonNetwork.LocalPlayer.NickName + " has joined to " + PhotonNetwork.CurrentRoom.Name);
+        ActivatePanel(insideRoomPanel.name);
     }
 
     #endregion

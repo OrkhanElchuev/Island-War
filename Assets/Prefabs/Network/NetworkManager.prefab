@@ -48,6 +48,8 @@ MonoBehaviour:
   connectionStatusText: {fileID: 0}
   gameOptionsPanel: {fileID: 0}
   createRoomPanel: {fileID: 0}
+  roomNameInput: {fileID: 0}
+  maxPlayerAmountInput: {fileID: 0}
   insideRoomPanel: {fileID: 0}
   roomListPanel: {fileID: 0}
   joinRandomRoomPanel: {fileID: 0}
