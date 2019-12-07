@@ -39,7 +39,6 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     [Header("Join Random Room UI Panel")]
     public GameObject joinRandomRoomPanel;
 
-
     // Private 
 
     private Dictionary<string, RoomInfo> cachedRoomList;
@@ -116,7 +115,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     #region UI Callbacks
 
-    // Back button located in the RoomListPanel
+    // Back button is located in the RoomListPanel
     public void OnBackButtonClicked()
     {
         // At this stage we do not need to stay in lobby
@@ -127,7 +126,20 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         ActivatePanel(gameOptionsPanel.name);
     }
 
-    // Create Room button located in the CreateRoomPanel
+    // Leave Game button is located in the InsideRoomPanel
+    public void OnLeaveGameButtonClicked()
+    {
+        PhotonNetwork.LeaveRoom();
+    }
+
+
+    // Cancel button is located in the CreateRoomPanel
+    public void OnCancelButtonClicked()
+    {
+        ActivatePanel(gameOptionsPanel.name);
+    }
+
+    // Create Room button is located in the CreateRoomPanel
     public void OnRoomCreateButtonClicked()
     {
         string roomName = roomNameInput.text;
@@ -143,13 +155,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         PhotonNetwork.CreateRoom(roomName, roomOptions);
     }
 
-    // Cancel button located in the CreateRoomPanel
-    public void OnCancelButtonClicked()
-    {
-        ActivatePanel(gameOptionsPanel.name);
-    }
-
-    // Login button located in the LoginPanel
+    // Login button is located in the LoginPanel
     public void OnLoginButtonClicked()
     {
         string playerName = playerNameInput.text;
@@ -166,13 +172,14 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         }
     }
 
-    // Leave Game button is located in the InsideRoomPanel
-    public void OnLeaveGameButtonClicked()
+    // Random Room button is located in GameOptionsPanel
+    public void OnJoinRandomRoomButtonClicked()
     {
-        PhotonNetwork.LeaveRoom();
+        ActivatePanel(joinRandomRoomPanel.name);
+        PhotonNetwork.JoinRandomRoom();
     }
 
-    // Room List button located in GameOptionsPanel
+    // Room List button is located in GameOptionsPanel
     public void OnShowRoomListButtonClicked()
     {
         // Must be in lobby to see the existing rooms list
@@ -362,6 +369,18 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         // Clear player list 
         playerListGameObjects.Clear();
         playerListGameObjects = null;
+    }
+    
+    // In case of failing to join random room 
+    public override void OnJoinRandomFailed(short returnCode, string message)
+    {
+        Debug.Log(message);
+
+        string roomName = "Room " + Random.Range(1, 1000);
+        RoomOptions roomOptions = new RoomOptions();
+        roomOptions.MaxPlayers = 20;
+        // Create random room 
+        PhotonNetwork.CreateRoom(roomName, roomOptions);
     }
 
     #endregion
