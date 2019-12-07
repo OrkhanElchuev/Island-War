@@ -29,14 +29,16 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public Text roomInfoText;
     public GameObject playerListPrefab;
     public GameObject playerListParent;
+    public GameObject startGameButton;
 
     [Header("Room List UI Panel")]
     public GameObject roomListPanel;
+    public GameObject roomListPrefab;
+    public GameObject roomListParentGameObject;
 
     [Header("Join Random Room UI Panel")]
     public GameObject joinRandomRoomPanel;
-    public GameObject roomListPrefab;
-    public GameObject roomListParentGameObject;
+
 
     // Private 
 
@@ -262,6 +264,15 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
         Debug.Log(PhotonNetwork.LocalPlayer.NickName + " has joined to " + PhotonNetwork.CurrentRoom.Name);
         ActivatePanel(insideRoomPanel.name);
+        // Show "Start Game" button only for a player who created a room
+        if (PhotonNetwork.LocalPlayer.IsMasterClient)
+        {
+            startGameButton.SetActive(true);
+        }
+        else
+        {
+            startGameButton.SetActive(false);
+        }
 
         UpdateRoomInfoText();
 
