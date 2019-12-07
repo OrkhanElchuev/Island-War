@@ -67,6 +67,13 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     #region Private Methods
 
+    private void UpdateRoomInfoText()
+    {
+        // Assign room name, player count and max palyer amount to Room Information field
+        roomInfoText.text = "Room name: " + PhotonNetwork.CurrentRoom.Name + " " +
+         PhotonNetwork.CurrentRoom.PlayerCount + " / " + PhotonNetwork.CurrentRoom.MaxPlayers;
+    }
+
     private void ClearRoomList()
     {
         // Destroy every game object in room list
@@ -255,9 +262,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
         Debug.Log(PhotonNetwork.LocalPlayer.NickName + " has joined to " + PhotonNetwork.CurrentRoom.Name);
         ActivatePanel(insideRoomPanel.name);
-        // Assign room name, player count and max palyer amount to Room Information field
-        roomInfoText.text = "Room name: " + PhotonNetwork.CurrentRoom.Name + " " +
-         PhotonNetwork.CurrentRoom.PlayerCount + " / " + PhotonNetwork.CurrentRoom.MaxPlayers;
+
+        UpdateRoomInfoText();
 
         if (playerListGameObjects == null)
         {
@@ -290,6 +296,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     // Called when new remote player joins the same room we are in
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
+        UpdateRoomInfoText();
+
         GameObject playerListSingleGameObject = Instantiate(playerListPrefab);
         // Put newly instantiated player objects under Parent object for better arrangement
         playerListSingleGameObject.transform.SetParent(playerListParent.transform);
@@ -312,6 +320,9 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     // Called when player leaves the room we are in
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
+        UpdateRoomInfoText();
+
+        // Destroy and remove player game object
         Destroy(playerListGameObjects[otherPlayer.ActorNumber].gameObject);
         playerListGameObjects.Remove(otherPlayer.ActorNumber);
     }
