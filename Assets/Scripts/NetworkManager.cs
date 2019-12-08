@@ -132,7 +132,6 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         PhotonNetwork.LeaveRoom();
     }
 
-
     // Cancel button is located in the CreateRoomPanel
     public void OnCancelButtonClicked()
     {

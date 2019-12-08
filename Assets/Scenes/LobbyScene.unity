@@ -557,6 +557,16 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1455291477}
+    - target: {fileID: 2237909153274521378, guid: a46be2be188dde04a928c41bf785abce,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1455291477}
+    - target: {fileID: 2237909153274521378, guid: a46be2be188dde04a928c41bf785abce,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnJoinRandomRoomButtonClicked
+      objectReference: {fileID: 0}
     - target: {fileID: 2237909153274521388, guid: a46be2be188dde04a928c41bf785abce,
         type: 3}
       propertyPath: m_AnchorMin.y
