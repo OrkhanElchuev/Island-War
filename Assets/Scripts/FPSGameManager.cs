@@ -7,8 +7,6 @@ public class FPSGameManager : MonoBehaviour
 {
     [SerializeField] GameObject playerPrefab;
 
-    #region Unity Methods
-
     // Start is called before the first frame update
     void Start()
     {
@@ -26,12 +24,4 @@ public class FPSGameManager : MonoBehaviour
             }
         }
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
-    #endregion
 }
