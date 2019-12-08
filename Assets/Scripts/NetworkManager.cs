@@ -55,6 +55,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         ActivatePanel(loginPanel.name);
         cachedRoomList = new Dictionary<string, RoomInfo>();
         roomListGameObjects = new Dictionary<string, GameObject>();
+        // Synchronize scenes for all clients
+        PhotonNetwork.AutomaticallySyncScene = true;
     }
 
     // Update is called once per frame
@@ -130,6 +132,15 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public void OnLeaveGameButtonClicked()
     {
         PhotonNetwork.LeaveRoom();
+    }
+
+    // Start Game button is located in the InsideRoomPanel
+    public void OnStartGameButtonClicked()
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            PhotonNetwork.LoadLevel("GameScene");
+        }
     }
 
     // Cancel button is located in the CreateRoomPanel
@@ -369,7 +380,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         playerListGameObjects.Clear();
         playerListGameObjects = null;
     }
-    
+
     // In case of failing to join random room 
     public override void OnJoinRandomFailed(short returnCode, string message)
     {
