@@ -112,7 +112,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
 #if !MOBILE_INPUT
                 return movementSettings.Running;
 #else
-	            return false;
+                return false;
 #endif
             }
         }
@@ -128,7 +128,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
 
         private void Update()
         {
-           // RotateView();
+            RotateView();
 
             if (CrossPlatformInputManager.GetButtonDown("Jump") && !m_Jump)
             {

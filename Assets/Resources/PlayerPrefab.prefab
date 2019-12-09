@@ -3052,14 +3052,15 @@ MonoBehaviour:
       m_RotationOrder: 4
     CurrentTargetSpeed: 8
   mouseLook:
-    XSensitivity: 2
-    YSensitivity: 2
+    XSensitivity: 0.2
+    YSensitivity: 0.2
     clampVerticalRotation: 1
     MinimumX: -90
     MaximumX: 90
     smooth: 0
     smoothTime: 5
     lockCursor: 1
+    lookInputAxis: {x: 0, y: 0}
   advancedSettings:
     groundCheckDistance: 0.01
     stickToGroundHelperDistance: 0.5
@@ -3080,6 +3081,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   joystick: {fileID: 0}
+  fixedTouchField: {fileID: 0}
 --- !u!1 &1836477478094385939
 GameObject:
   m_ObjectHideFlags: 0
