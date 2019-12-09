@@ -12,11 +12,13 @@ public class PlayerSetup : MonoBehaviourPunCallbacks
     public Camera FPSCamera;
 
     private PlayerMovementController playerMovementController;
+    private Animator animator;
 
     // Start is called before the first frame update
     void Start()
     {
         playerMovementController = GetComponent<PlayerMovementController>();
+        animator = GetComponent<Animator>();
         HandleRelevantView();
     }
 
@@ -43,6 +45,8 @@ public class PlayerSetup : MonoBehaviourPunCallbacks
             playerMovementController.fixedTouchField =
                 playerUIGameObject.transform.Find("RotationTouchPanel").GetComponent<FixedTouchField>();
             FPSCamera.enabled = true;    
+            // Set hand model animation
+            animator.SetBool("IsPlayerModel", false);
         }
         // For the rest of the players show our body model 
         else
@@ -61,6 +65,8 @@ public class PlayerSetup : MonoBehaviourPunCallbacks
             playerMovementController.enabled = false;
             GetComponent<RigidbodyFirstPersonController>().enabled = false;
             FPSCamera.enabled = false;
+            // Set Player model animation
+            animator.SetBool("IsPlayerModel", true);
         }
     }
 }
