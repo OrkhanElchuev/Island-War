@@ -2980,7 +2980,7 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 3740316237461812088}
   - {fileID: 843696074}
-  viewIdField: 1
+  viewIdField: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
 --- !u!114 &7031028002195212419
