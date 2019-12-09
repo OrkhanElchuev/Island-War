@@ -2901,6 +2901,7 @@ GameObject:
   - component: {fileID: 7031028002195212419}
   - component: {fileID: 625021884090637604}
   - component: {fileID: 8711717560398963598}
+  - component: {fileID: 3740316237461812088}
   m_Layer: 0
   m_Name: PlayerPrefab
   m_TagString: Untagged
@@ -2972,10 +2973,10 @@ MonoBehaviour:
   ObservedComponentsFoldoutOpen: 1
   Group: 0
   prefixField: -1
-  Synchronization: 0
+  Synchronization: 3
   OwnershipTransfer: 0
   ObservedComponents:
-  - {fileID: 0}
+  - {fileID: 3740316237461812088}
   viewIdField: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -2986,7 +2987,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1836477478091419461}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cb9592d26c22b6742906c1d94a5f2a72, type: 3}
   m_Name: 
@@ -2997,6 +2998,9 @@ MonoBehaviour:
   SoldierChildGameObjects:
   - {fileID: 1836477477958138369}
   - {fileID: 1836477477542862971}
+  playerUIPrefab: {fileID: 7417406478914502258, guid: 059ecc70fb71bea439542125271633db,
+    type: 3}
+  FPSCamera: {fileID: 6254842732252214107}
 --- !u!114 &625021884090637604
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3059,7 +3063,7 @@ MonoBehaviour:
     MaximumX: 90
     smooth: 0
     smoothTime: 5
-    lockCursor: 1
+    lockCursor: 0
     lookInputAxis: {x: 0, y: 0}
   advancedSettings:
     groundCheckDistance: 0.01
@@ -3082,6 +3086,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   joystick: {fileID: 0}
   fixedTouchField: {fileID: 0}
+--- !u!114 &3740316237461812088
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1836477478091419461}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
 --- !u!1 &1836477478094385939
 GameObject:
   m_ObjectHideFlags: 0
