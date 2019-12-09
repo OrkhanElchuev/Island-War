@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using UnityStandardAssets.Characters.FirstPerson;
+using UnityEngine.UI;
 
 public class PlayerSetup : MonoBehaviourPunCallbacks
 {
@@ -13,10 +14,12 @@ public class PlayerSetup : MonoBehaviourPunCallbacks
 
     private PlayerMovementController playerMovementController;
     private Animator animator;
+    private Shooting shooter;
 
     // Start is called before the first frame update
     void Start()
     {
+        shooter = GetComponent<Shooting>();
         playerMovementController = GetComponent<PlayerMovementController>();
         animator = GetComponent<Animator>();
         HandleRelevantView();
@@ -40,11 +43,14 @@ public class PlayerSetup : MonoBehaviourPunCallbacks
             // Instantiate Player UI only for myself
             GameObject playerUIGameObject = Instantiate(playerUIPrefab);
             // Assign Joystick and player rotation field
-            playerMovementController.joystick = 
+            playerMovementController.joystick =
                 playerUIGameObject.transform.Find("Fixed Joystick").GetComponent<Joystick>();
             playerMovementController.fixedTouchField =
                 playerUIGameObject.transform.Find("RotationTouchPanel").GetComponent<FixedTouchField>();
-            FPSCamera.enabled = true;    
+
+            playerUIGameObject.transform.Find("Shoot").GetComponent<Button>().onClick.AddListener(() => shooter.Attack());
+
+            FPSCamera.enabled = true;
             // Set hand model animation
             animator.SetBool("IsPlayerModel", false);
         }
@@ -60,7 +66,7 @@ public class PlayerSetup : MonoBehaviourPunCallbacks
             {
                 gameObject.SetActive(true);
             }
-           
+
             // Disable joystick components and camera 
             playerMovementController.enabled = false;
             GetComponent<RigidbodyFirstPersonController>().enabled = false;

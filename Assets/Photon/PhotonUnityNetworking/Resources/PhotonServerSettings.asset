@@ -31,5 +31,7 @@ MonoBehaviour:
   RpcList:
   - ClickRpc
   - DestroyRpc
+  - TakeDamage
+  - CreateHitEffect
   DisableAutoOpenWizard: 1
   ShowSettings: 1
