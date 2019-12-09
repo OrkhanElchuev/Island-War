@@ -19,6 +19,8 @@ public class PlayerSetup : MonoBehaviourPunCallbacks
     // Start is called before the first frame update
     void Start()
     {
+        // To avoid multiple audio listener in one scene warning
+        FindObjectOfType<Camera>().GetComponent<AudioListener>().enabled = false;
         shooter = GetComponent<Shooting>();
         playerMovementController = GetComponent<PlayerMovementController>();
         animator = GetComponent<Animator>();
