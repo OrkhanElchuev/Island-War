@@ -2476,7 +2476,7 @@ GameObject:
   - component: {fileID: 1836477477958138374}
   m_Layer: 0
   m_Name: swat:Hips
-  m_TagString: Untagged
+  m_TagString: Body
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2574,7 +2574,7 @@ GameObject:
   - component: {fileID: 1836477478003685245}
   m_Layer: 0
   m_Name: Soldier_body
-  m_TagString: Untagged
+  m_TagString: Body
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3172,6 +3172,8 @@ MonoBehaviour:
   FPS_Camera: {fileID: 6254842732252214107}
   hitEffectPrefab: {fileID: 4832279199613413310, guid: e42734925213dac42ac90d9cabac69e9,
     type: 3}
+  bloodEffect: {fileID: 1013274939826982, guid: ffbf169ab9dcfdc45ae14010bc82a6b2,
+    type: 3}
 --- !u!1 &1836477478094385939
 GameObject:
   m_ObjectHideFlags: 0
@@ -3220,7 +3222,7 @@ GameObject:
   - component: {fileID: 1836477478121607113}
   m_Layer: 0
   m_Name: Soldier_head
-  m_TagString: Untagged
+  m_TagString: Head
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

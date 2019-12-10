@@ -34,5 +34,6 @@ MonoBehaviour:
   - TakeDamage
   - CreateHitEffect
   - RestoreHealth
+  - CreateBloodEffect
   DisableAutoOpenWizard: 1
   ShowSettings: 1

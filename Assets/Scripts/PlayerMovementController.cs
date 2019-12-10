@@ -4,9 +4,9 @@ using UnityEngine;
 using UnityStandardAssets.Characters.FirstPerson;
 
 public class PlayerMovementController : MonoBehaviour
-{   
-    [HideInInspector] public Joystick joystick;
-    [HideInInspector] public FixedTouchField fixedTouchField;
+{
+    public Joystick joystick;
+    public FixedTouchField fixedTouchField;
 
     private Animator animator;
     private RigidbodyFirstPersonController rbController;

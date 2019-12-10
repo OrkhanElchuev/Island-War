@@ -8,6 +8,7 @@ public class Shooting : MonoBehaviourPunCallbacks
 {
     public Camera FPS_Camera;
     public GameObject hitEffectPrefab;
+    public GameObject bloodEffect;
     private float health = 100f;
     private Animator animator;
     private GameObject deathPanel;
@@ -16,7 +17,6 @@ public class Shooting : MonoBehaviourPunCallbacks
     private void Start()
     {
         deathPanel = GameObject.Find("DeathPanel");
-        respawnText = GameObject.Find("RespawnText");
         deathPanel.SetActive(false);
         animator = GetComponent<Animator>();
     }
@@ -37,6 +37,7 @@ public class Shooting : MonoBehaviourPunCallbacks
             if (hit.collider.gameObject.CompareTag("Player") && !hit.collider.gameObject.GetComponent<PhotonView>().IsMine)
             {
                 hit.collider.gameObject.GetComponent<PhotonView>().RPC("TakeDamage", RpcTarget.AllBuffered, 10f);
+                photonView.RPC("CreateBloodEffect", RpcTarget.All, hit.point);
             }
         }
     }
@@ -62,6 +63,14 @@ public class Shooting : MonoBehaviourPunCallbacks
         Destroy(hitEffectGameObject, 0.5f);
     }
 
+    [PunRPC]
+    public void CreateBloodEffect(Vector3 position)
+    {
+        // Run blood effect
+        GameObject hitEffectGameObject = Instantiate(bloodEffect, position, Quaternion.identity);
+        Destroy(hitEffectGameObject, 0.7f);
+    }
+
     // Dying animation
     private void Die()
     {
@@ -82,6 +91,7 @@ public class Shooting : MonoBehaviourPunCallbacks
 
     IEnumerator Respawn()
     {
+        respawnText = GameObject.Find("RespawnText");
         // Set respawning period
         float respawnPeriod = 5.0f;
         // Count down 
