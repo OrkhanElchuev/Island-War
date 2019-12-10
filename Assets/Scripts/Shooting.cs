@@ -2,17 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using UnityEngine.UI;
 
 public class Shooting : MonoBehaviourPunCallbacks
 {
     public Camera FPS_Camera;
     public GameObject hitEffectPrefab;
+    public GameObject deathCanvas;
     private float health = 100f;
     private Animator animator;
 
     private void Start()
     {
         animator = GetComponent<Animator>();
+        deathCanvas = GetComponent<GameObject>();
     }
 
     // Shooting via sending invisible Rays
@@ -62,6 +65,39 @@ public class Shooting : MonoBehaviourPunCallbacks
         if (photonView.IsMine)
         {
             animator.SetBool("IsDead", true);
+            StartCoroutine(Respawn());
         }
+    }
+
+    IEnumerator Respawn()
+    {
+        GameObject respawnText = GameObject.Find("RespawnText");
+        // Set respawning period
+        float respawnPeriod = 5.0f;
+        while (respawnPeriod > 0.0f)
+        {
+            yield return new WaitForSeconds(1.0f);
+            respawnPeriod -= 1.0f;
+            // Deactivate player movement 
+            transform.GetComponent<PlayerMovementController>().enabled = false;
+            respawnText.GetComponent<Text>().text = "You are killed. Respawning at : " + respawnPeriod.ToString(".00");
+            deathCanvas.SetActive(true);
+        }
+        // Reset player back to normal state
+        animator.SetBool("IsDead", false);
+        deathCanvas.SetActive(false);
+        respawnText.GetComponent<Text>().text = " ";
+        // Generate a random value for spawning point
+        int randomPoint = Random.Range(-20, 20);
+        transform.position = new Vector3(randomPoint, 0, randomPoint);
+        transform.GetComponent<PlayerMovementController>().enabled = true;
+        // Restore health points of newly spawned player for all clients
+        photonView.RPC("RestoreHealth", RpcTarget.AllBuffered);
+    }
+
+    [PunRPC]
+    public void RestoreHealth()
+    {
+        health = 100f;
     }
 }

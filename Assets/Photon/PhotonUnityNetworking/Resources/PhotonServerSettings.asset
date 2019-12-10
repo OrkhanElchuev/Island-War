@@ -33,5 +33,6 @@ MonoBehaviour:
   - DestroyRpc
   - TakeDamage
   - CreateHitEffect
+  - RestoreHealth
   DisableAutoOpenWizard: 1
   ShowSettings: 1
