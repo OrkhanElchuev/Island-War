@@ -9,6 +9,7 @@ public class Shooting : MonoBehaviourPunCallbacks
     public Camera FPS_Camera;
     public GameObject hitEffectPrefab;
     public GameObject bloodEffect;
+
     private float health = 100f;
     private Animator animator;
     private GameObject deathPanel;
@@ -30,7 +31,8 @@ public class Shooting : MonoBehaviourPunCallbacks
 
         if (Physics.Raycast(ray, out hit, 100))
         {
-            Debug.Log(hit.collider.gameObject.name);
+            // Debug.Log(hit.collider.gameObject.name); // <<< Only for Debugging purposes
+
             // Display hit effect to all players in room
             photonView.RPC("CreateHitEffect", RpcTarget.All, hit.point);
             // Check if collided object is Player excluding ourselves
@@ -42,6 +44,8 @@ public class Shooting : MonoBehaviourPunCallbacks
         }
     }
 
+    #region PunRPC Methods
+
     [PunRPC]
     public void TakeDamage(float damage, PhotonMessageInfo info)
     {
@@ -51,7 +55,7 @@ public class Shooting : MonoBehaviourPunCallbacks
         if (health <= 0f)
         {
             Die();
-            Debug.Log(info.Sender.NickName + " killed " + info.photonView.Owner.NickName);
+            // Debug.Log(info.Sender.NickName + " killed " + info.photonView.Owner.NickName); // <<< Only for Debugging purposes
         }
     }
 
@@ -71,6 +75,16 @@ public class Shooting : MonoBehaviourPunCallbacks
         Destroy(hitEffectGameObject, 0.7f);
     }
 
+    [PunRPC]
+    public void RestoreHealth()
+    {
+        health = 100f;
+    }
+
+    #endregion
+    
+    #region Private Methods
+
     // Dying animation
     private void Die()
     {
@@ -88,6 +102,8 @@ public class Shooting : MonoBehaviourPunCallbacks
         respawnText.GetComponent<Text>().text = " ";
         deathPanel.SetActive(false);
     }
+
+    #endregion
 
     IEnumerator Respawn()
     {
@@ -110,9 +126,5 @@ public class Shooting : MonoBehaviourPunCallbacks
         photonView.RPC("RestoreHealth", RpcTarget.AllBuffered);
     }
 
-    [PunRPC]
-    public void RestoreHealth()
-    {
-        health = 100f;
-    }
+
 }

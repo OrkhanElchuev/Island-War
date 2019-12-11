@@ -11,7 +11,6 @@ public class PlayerMovementController : MonoBehaviour
     private Animator animator;
     private RigidbodyFirstPersonController rbController;
 
-
     // Start is called before the first frame update
     void Start()
     {
