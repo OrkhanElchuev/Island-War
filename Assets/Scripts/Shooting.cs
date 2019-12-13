@@ -10,6 +10,7 @@ public class Shooting : MonoBehaviourPunCallbacks
     public GameObject hitEffectPrefab;
     public GameObject bloodEffect;
 
+    private Text healthText;
     private float health = 100f;
     private Animator animator;
     private GameObject deathPanel;
@@ -17,6 +18,7 @@ public class Shooting : MonoBehaviourPunCallbacks
 
     private void Start()
     {
+        healthText = GameObject.Find("HealthPoints").GetComponent<Text>();
         deathPanel = GameObject.Find("DeathPanel");
         deathPanel.SetActive(false);
         animator = GetComponent<Animator>();
@@ -50,7 +52,11 @@ public class Shooting : MonoBehaviourPunCallbacks
     public void TakeDamage(float damage, PhotonMessageInfo info)
     {
         health -= damage;
-        Debug.Log(health);
+        if (health >= 0f)
+        {
+            UpdateHealthText();
+        }
+        // Debug.Log(health);
         // If player is killed run dying animation
         if (health <= 0f)
         {
@@ -82,8 +88,13 @@ public class Shooting : MonoBehaviourPunCallbacks
     }
 
     #endregion
-    
+
     #region Private Methods
+
+    private void UpdateHealthText()
+    {
+        healthText.GetComponent<Text>().text = health.ToString();
+    }
 
     // Dying animation
     private void Die()
@@ -101,6 +112,7 @@ public class Shooting : MonoBehaviourPunCallbacks
         animator.SetBool("IsDead", false);
         respawnText.GetComponent<Text>().text = " ";
         deathPanel.SetActive(false);
+        UpdateHealthText();
     }
 
     #endregion
@@ -124,5 +136,6 @@ public class Shooting : MonoBehaviourPunCallbacks
         transform.position = new Vector3(randomPoint, 0, randomPoint);
         // Restore health points of newly spawned player for all clients
         photonView.RPC("RestoreHealth", RpcTarget.AllBuffered);
+        UpdateHealthText();
     }
 }

@@ -32,7 +32,6 @@ public class PlayerSetup : MonoBehaviourPunCallbacks
         animator = GetComponent<Animator>();
     }
 
-
     private void HandleRelevantView()
     {
         // For us show only hand and gun (deactivate body model)
