@@ -30,7 +30,7 @@ public class Shooting : MonoBehaviourPunCallbacks
         RaycastHit hit;
         // Send a ray to the middle of the camera view(screen)
         Ray ray = FPS_Camera.ViewportPointToRay(new Vector3(0.5f, 0.5f));
-
+        float randomDamage = Random.Range(5f, 20f);
         if (Physics.Raycast(ray, out hit, 100))
         {
             // Debug.Log(hit.collider.gameObject.name); // <<< Only for Debugging purposes
@@ -40,7 +40,7 @@ public class Shooting : MonoBehaviourPunCallbacks
             // Check if collided object is Player excluding ourselves
             if (hit.collider.gameObject.CompareTag("Player") && !hit.collider.gameObject.GetComponent<PhotonView>().IsMine)
             {
-                hit.collider.gameObject.GetComponent<PhotonView>().RPC("TakeDamage", RpcTarget.AllBuffered, 10f);
+                hit.collider.gameObject.GetComponent<PhotonView>().RPC("TakeDamage", RpcTarget.AllBuffered, randomDamage);
                 photonView.RPC("CreateBloodEffect", RpcTarget.All, hit.point);
             }
         }
@@ -52,14 +52,12 @@ public class Shooting : MonoBehaviourPunCallbacks
     public void TakeDamage(float damage, PhotonMessageInfo info)
     {
         health -= damage;
-        if (health >= 0f)
-        {
-            UpdateHealthText();
-        }
-        // Debug.Log(health);
+        UpdateHealthText();
         // If player is killed run dying animation
         if (health <= 0f)
         {
+            // Avoid having negative health
+            health = 0f;
             Die();
             // Debug.Log(info.Sender.NickName + " killed " + info.photonView.Owner.NickName); // <<< Only for Debugging purposes
         }
