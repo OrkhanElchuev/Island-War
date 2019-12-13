@@ -165,6 +165,10 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         PhotonNetwork.CreateRoom(roomName, roomOptions);
     }
 
+    public void OnQuitButton()
+    {
+        Application.Quit();
+    }
     // Login button is located in the LoginPanel
     public void OnLoginButtonClicked()
     {
