@@ -14,7 +14,6 @@ public class Shooting : MonoBehaviourPunCallbacks
     private float health = 100f;
     private Animator playerAnimator;
     private Animator hurtPanelAnimator;
-    private GameObject hurtPanel;
     private GameObject deathPanel;
     private GameObject respawnText;
 
@@ -22,10 +21,8 @@ public class Shooting : MonoBehaviourPunCallbacks
     {
         // Find Game objects on scene
         healthText = GameObject.Find("HealthPoints").GetComponent<Text>();
-        hurtPanel = GameObject.Find("HurtPanel");
         deathPanel = GameObject.Find("DeathPanel");
-        // Deactivate Panels on start
-        hurtPanel.SetActive(false);
+
         deathPanel.SetActive(false);
         // Get components for Animators
         playerAnimator = GetComponent<Animator>();
@@ -63,7 +60,6 @@ public class Shooting : MonoBehaviourPunCallbacks
     {
         health -= damage;
         UpdateHealthText();
-        HandleHurtPanelAnimation();
         // If player is killed run dying animation
         if (health <= 0f)
         {
@@ -99,12 +95,6 @@ public class Shooting : MonoBehaviourPunCallbacks
     #endregion
 
     #region Private Methods
-
-    // Display red panel for a short period of time each time damage is received
-    private void HandleHurtPanelAnimation()
-    {
-        hurtPanelAnimator.SetTrigger("IsHurt");
-    }
 
     private void UpdateHealthText()
     {
