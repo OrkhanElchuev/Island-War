@@ -19,13 +19,19 @@ public class PlayerSetup : MonoBehaviourPunCallbacks
     // Start is called before the first frame update
     void Start()
     {
+        InitialSetup();
+        HandleRelevantView();
+    }
+
+    private void InitialSetup()
+    {
         // To avoid multiple audio listener in one scene warning
         FindObjectOfType<Camera>().GetComponent<AudioListener>().enabled = false;
         shooter = GetComponent<Shooting>();
         playerMovementController = GetComponent<PlayerMovementController>();
         animator = GetComponent<Animator>();
-        HandleRelevantView();
     }
+
 
     private void HandleRelevantView()
     {
@@ -49,7 +55,6 @@ public class PlayerSetup : MonoBehaviourPunCallbacks
                 playerUIGameObject.transform.Find("Fixed Joystick").GetComponent<Joystick>();
             playerMovementController.fixedTouchField =
                 playerUIGameObject.transform.Find("RotationTouchPanel").GetComponent<FixedTouchField>();
-
             playerUIGameObject.transform.Find("Shoot").GetComponent<Button>().onClick.AddListener(() => shooter.Attack());
 
             FPSCamera.enabled = true;

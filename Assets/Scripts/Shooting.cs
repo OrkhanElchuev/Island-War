@@ -125,6 +125,4 @@ public class Shooting : MonoBehaviourPunCallbacks
         // Restore health points of newly spawned player for all clients
         photonView.RPC("RestoreHealth", RpcTarget.AllBuffered);
     }
-
-
 }
