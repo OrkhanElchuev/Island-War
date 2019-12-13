@@ -597,6 +597,11 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2237909153104397168, guid: a46be2be188dde04a928c41bf785abce,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -161
+      objectReference: {fileID: 0}
     - target: {fileID: 2237909153104397169, guid: a46be2be188dde04a928c41bf785abce,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -902,6 +907,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Colors.m_NormalColor.a
       value: 0.39215687
+      objectReference: {fileID: 0}
+    - target: {fileID: 2237909153852072230, guid: a46be2be188dde04a928c41bf785abce,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 50.000015
       objectReference: {fileID: 0}
     - target: {fileID: 2237909153987989025, guid: a46be2be188dde04a928c41bf785abce,
         type: 3}
