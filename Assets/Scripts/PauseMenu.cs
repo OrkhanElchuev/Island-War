@@ -6,12 +6,10 @@ using Photon.Pun;
 public class PauseMenu : MonoBehaviour
 {
     private GameObject pausePanel;
-    private NetworkManager networkManager;
 
     // Start is called before the first frame update
     void Start()
     {
-        networkManager = FindObjectOfType<NetworkManager>();
         // Find Pause panel and initially hide it
         pausePanel = GameObject.Find("PausePanel");
         pausePanel.SetActive(false);
@@ -30,6 +28,10 @@ public class PauseMenu : MonoBehaviour
 
     public void OnHomeButtonClick()
     {
-        networkManager.OnShowRoomListButtonClicked();
+        pausePanel.SetActive(false);
+        PhotonNetwork.LeaveRoom();
+        PhotonNetwork.Disconnect();
+        PhotonNetwork.LoadLevel("LobbyScene");
+        PhotonNetwork.ReconnectAndRejoin();
     }
 }
