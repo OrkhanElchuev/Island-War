@@ -12,16 +12,14 @@ public class Shooting : MonoBehaviourPunCallbacks
 
     private Text healthText;
     private float health = 100f;
-    private Animator animator;
+    private Animator playerAnimator;
+    private Animator hurtPanelAnimator;
     private GameObject deathPanel;
     private GameObject respawnText;
 
     private void Start()
     {
-        healthText = GameObject.Find("HealthPoints").GetComponent<Text>();
-        deathPanel = GameObject.Find("DeathPanel");
-        deathPanel.SetActive(false);
-        animator = GetComponent<Animator>();
+        InitialSetup();
     }
 
     // Shooting via sending invisible Rays
@@ -53,6 +51,7 @@ public class Shooting : MonoBehaviourPunCallbacks
     {
         health -= damage;
         UpdateHealthText();
+        HandleHurtPanelAnimation();
         // If player is killed run dying animation
         if (health <= 0f)
         {
@@ -89,6 +88,24 @@ public class Shooting : MonoBehaviourPunCallbacks
 
     #region Private Methods
 
+    private void InitialSetup()
+    {
+        healthText = GameObject.Find("HealthPoints").GetComponent<Text>();
+        deathPanel = GameObject.Find("DeathPanel");
+        if (photonView.IsMine)
+        {
+            deathPanel.SetActive(false);
+        }
+        playerAnimator = GetComponent<Animator>();
+        hurtPanelAnimator = GetComponent<Animator>();
+    }
+
+    // Display red panel for a short period of time each time damage is received
+    private void HandleHurtPanelAnimation()
+    {
+        hurtPanelAnimator.SetTrigger("IsHurt");
+    }
+
     private void UpdateHealthText()
     {
         healthText.GetComponent<Text>().text = health.ToString();
@@ -99,7 +116,7 @@ public class Shooting : MonoBehaviourPunCallbacks
     {
         if (photonView.IsMine)
         {
-            animator.SetBool("IsDead", true);
+            playerAnimator.SetBool("IsDead", true);
             StartCoroutine(Respawn());
         }
     }
@@ -107,7 +124,7 @@ public class Shooting : MonoBehaviourPunCallbacks
     // Resets player UI and animation state to initial values
     private void ResetPlayer()
     {
-        animator.SetBool("IsDead", false);
+        playerAnimator.SetBool("IsDead", false);
         respawnText.GetComponent<Text>().text = " ";
         deathPanel.SetActive(false);
         UpdateHealthText();

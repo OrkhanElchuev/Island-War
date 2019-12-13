@@ -3,16 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 
-public class PauseMenu : MonoBehaviour
+public class PauseMenu : MonoBehaviourPunCallbacks
 {
     private GameObject pausePanel;
 
     // Start is called before the first frame update
     void Start()
     {
-        // Find Pause panel and initially hide it
-        pausePanel = GameObject.Find("PausePanel");
-        pausePanel.SetActive(false);
+        if (photonView.IsMine)
+        {
+            pausePanel = GameObject.Find("PausePanel");
+            // Find Pause panel and initially hide it
+            pausePanel.SetActive(false);
+        }
     }
 
     public void ActivatePausePanel()
@@ -33,5 +36,5 @@ public class PauseMenu : MonoBehaviour
         PhotonNetwork.Disconnect();
         PhotonNetwork.LoadLevel("LobbyScene");
         PhotonNetwork.ReconnectAndRejoin();
-     }
+    }
 }
