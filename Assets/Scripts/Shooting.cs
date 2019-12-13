@@ -14,12 +14,22 @@ public class Shooting : MonoBehaviourPunCallbacks
     private float health = 100f;
     private Animator playerAnimator;
     private Animator hurtPanelAnimator;
+    private GameObject hurtPanel;
     private GameObject deathPanel;
     private GameObject respawnText;
 
     private void Start()
     {
-        InitialSetup();
+        // Find Game objects on scene
+        healthText = GameObject.Find("HealthPoints").GetComponent<Text>();
+        hurtPanel = GameObject.Find("HurtPanel");
+        deathPanel = GameObject.Find("DeathPanel");
+        // Deactivate Panels on start
+        hurtPanel.SetActive(false);
+        deathPanel.SetActive(false);
+        // Get components for Animators
+        playerAnimator = GetComponent<Animator>();
+        hurtPanelAnimator = GetComponent<Animator>();
     }
 
     // Shooting via sending invisible Rays
@@ -28,7 +38,7 @@ public class Shooting : MonoBehaviourPunCallbacks
         RaycastHit hit;
         // Send a ray to the middle of the camera view(screen)
         Ray ray = FPS_Camera.ViewportPointToRay(new Vector3(0.5f, 0.5f));
-        float randomDamage = Random.Range(5f, 20f);
+        int randomDamage = Random.Range(5, 20);
         if (Physics.Raycast(ray, out hit, 100))
         {
             // Debug.Log(hit.collider.gameObject.name); // <<< Only for Debugging purposes
@@ -36,9 +46,11 @@ public class Shooting : MonoBehaviourPunCallbacks
             // Display hit effect to all players in room
             photonView.RPC("CreateHitEffect", RpcTarget.All, hit.point);
             // Check if collided object is Player excluding ourselves
-            if (hit.collider.gameObject.CompareTag("Player") && !hit.collider.gameObject.GetComponent<PhotonView>().IsMine)
+            if (hit.collider.gameObject.CompareTag("Player") && 
+                !hit.collider.gameObject.GetComponent<PhotonView>().IsMine)
             {
-                hit.collider.gameObject.GetComponent<PhotonView>().RPC("TakeDamage", RpcTarget.AllBuffered, randomDamage);
+                hit.collider.gameObject.GetComponent<PhotonView>().RPC("TakeDamage", 
+                    RpcTarget.AllBuffered, (float)randomDamage);
                 photonView.RPC("CreateBloodEffect", RpcTarget.All, hit.point);
             }
         }
@@ -58,7 +70,7 @@ public class Shooting : MonoBehaviourPunCallbacks
             // Avoid having negative health
             health = 0f;
             Die();
-            // Debug.Log(info.Sender.NickName + " killed " + info.photonView.Owner.NickName); // <<< Only for Debugging purposes
+            // Debug.Log(info.Sender.NickName + " killed " + info.photonView.Owner.NickName); 
         }
     }
 
@@ -88,18 +100,6 @@ public class Shooting : MonoBehaviourPunCallbacks
 
     #region Private Methods
 
-    private void InitialSetup()
-    {
-        healthText = GameObject.Find("HealthPoints").GetComponent<Text>();
-        deathPanel = GameObject.Find("DeathPanel");
-        if (photonView.IsMine)
-        {
-            deathPanel.SetActive(false);
-        }
-        playerAnimator = GetComponent<Animator>();
-        hurtPanelAnimator = GetComponent<Animator>();
-    }
-
     // Display red panel for a short period of time each time damage is received
     private void HandleHurtPanelAnimation()
     {
@@ -108,7 +108,10 @@ public class Shooting : MonoBehaviourPunCallbacks
 
     private void UpdateHealthText()
     {
-        healthText.GetComponent<Text>().text = health.ToString();
+        if (photonView.IsMine)
+        {
+            healthText.GetComponent<Text>().text = health.ToString();
+        }
     }
 
     // Dying animation
