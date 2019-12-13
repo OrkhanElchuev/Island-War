@@ -38,12 +38,12 @@ public class PlayerMovementController : MonoBehaviour
         // Make a transition to running state at 0.9 position of joystick
         if (Mathf.Abs(joystick.Horizontal) > 0.9f || Mathf.Abs(joystick.Vertical) > 0.9f)
         {
-            rbController.movementSettings.ForwardSpeed = 10;
+            rbController.movementSettings.ForwardSpeed = 8;
             animator.SetBool("IsRunning", true);
         }
         else
         {
-            rbController.movementSettings.ForwardSpeed = 6;
+            rbController.movementSettings.ForwardSpeed = 5;
             animator.SetBool("IsRunning", false);
         }
     }
