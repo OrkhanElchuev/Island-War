@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 199325509572367008}
   - component: {fileID: 114145297457417836}
   m_Layer: 0
-  m_Name: bloodEffectParticlePrefab_melee
+  m_Name: BloodEffect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -26,7 +26,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1013274939826982}
-  m_LocalRotation: {x: -0, y: -0.9965261, z: -0, w: 0.08328194}
+  m_LocalRotation: {x: 0, y: 0.9965264, z: -0, w: -0.08327751}
   m_LocalPosition: {x: -2.2, y: 2.738, z: -2.217}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -4709,7 +4709,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 8d9ea170b1f707e4b8c201442ccaf92c, type: 2}
+  - {fileID: 2100000, guid: c85582f4c403c8246bbaeb4a9639b32e, type: 2}
   - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0

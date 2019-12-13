@@ -33,5 +33,5 @@ public class PauseMenu : MonoBehaviour
         PhotonNetwork.Disconnect();
         PhotonNetwork.LoadLevel("LobbyScene");
         PhotonNetwork.ReconnectAndRejoin();
-    }
+     }
 }
