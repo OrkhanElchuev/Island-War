@@ -37,5 +37,6 @@ MonoBehaviour:
   - CreateBloodEffect
   - Server_DoSound
   - ServerShootingSound
+  - ServerDeathSound
   DisableAutoOpenWizard: 1
   ShowSettings: 1
