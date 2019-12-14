@@ -149,6 +149,7 @@ QualitySettings:
     - Standalone
     - Android
     - WebGL
+    - iPhone
   - serializedVersion: 2
     name: Very High
     pixelLightCount: 3
@@ -187,6 +188,7 @@ QualitySettings:
     - WebGL
     - Android
     - Standalone
+    - iPhone
   - serializedVersion: 2
     name: Ultra
     pixelLightCount: 4
@@ -225,6 +227,7 @@ QualitySettings:
     - Standalone
     - Android
     - WebGL
+    - iPhone
   m_PerPlatformDefaultQuality:
     Android: 2
     Lumin: 5
