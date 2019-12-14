@@ -10,6 +10,7 @@ public class Shooting : MonoBehaviourPunCallbacks
     public GameObject hitEffectPrefab;
     public GameObject bloodEffect;
     public AudioSource shootingSound;
+    public AudioSource deathSound;
 
     private Text healthText;
     private float health = 100f;
@@ -66,6 +67,12 @@ public class Shooting : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
+    public void ServerDeathSound()
+    {
+        deathSound.Play();
+    }
+
+    [PunRPC]
     public void TakeDamage(float damage, PhotonMessageInfo info)
     {
         health -= damage;
@@ -119,6 +126,7 @@ public class Shooting : MonoBehaviourPunCallbacks
     {
         if (photonView.IsMine)
         {
+            photonView.RPC("ServerDeathSound", RpcTarget.AllBuffered);
             playerAnimator.SetBool("IsDead", true);
             StartCoroutine(Respawn());
         }
