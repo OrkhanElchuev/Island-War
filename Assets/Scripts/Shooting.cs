@@ -39,7 +39,7 @@ public class Shooting : MonoBehaviourPunCallbacks
         // Send a ray to the middle of the camera view(screen)
         Ray ray = FPS_Camera.ViewportPointToRay(new Vector3(0.5f, 0.5f));
         int randomDamage = Random.Range(5, 20);
-        if (Physics.Raycast(ray, out hit, 100))
+        if (Physics.Raycast(ray, out hit, 150))
         {
             photonView.RPC("ServerShootingSound", RpcTarget.AllBuffered);
             // Display hit effect to all players in room
@@ -64,7 +64,6 @@ public class Shooting : MonoBehaviourPunCallbacks
     {
         shootingSound.Play();
     }
-
 
     [PunRPC]
     public void TakeDamage(float damage, PhotonMessageInfo info)

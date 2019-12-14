@@ -25,16 +25,15 @@ public class PlayerSetup : MonoBehaviourPunCallbacks
 
     private void Update()
     {
-
-    }
-    
-    private void InitialSetup()
-    {
         // To avoid multiple audio listener in one scene warning
         if (!photonView.IsMine)
         {
             FindObjectOfType<Camera>().GetComponent<AudioListener>().enabled = false;
         }
+    }
+
+    private void InitialSetup()
+    {
         shooter = GetComponent<Shooting>();
         playerMovementController = GetComponent<PlayerMovementController>();
         animator = GetComponent<Animator>();
