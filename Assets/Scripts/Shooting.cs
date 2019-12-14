@@ -9,6 +9,7 @@ public class Shooting : MonoBehaviourPunCallbacks
     public Camera FPS_Camera;
     public GameObject hitEffectPrefab;
     public GameObject bloodEffect;
+    public AudioSource shootingSound;
 
     private Text healthText;
     private float health = 100f;
@@ -22,12 +23,14 @@ public class Shooting : MonoBehaviourPunCallbacks
         // Find Game objects on scene
         healthText = GameObject.Find("HealthPoints").GetComponent<Text>();
         deathPanel = GameObject.Find("DeathPanel");
-
         deathPanel.SetActive(false);
         // Get components for Animators
         playerAnimator = GetComponent<Animator>();
         hurtPanelAnimator = GetComponent<Animator>();
+        shootingSound = GetComponent<AudioSource>();
     }
+
+    #region Public Methods
 
     // Shooting via sending invisible Rays
     public void Attack()
@@ -38,22 +41,30 @@ public class Shooting : MonoBehaviourPunCallbacks
         int randomDamage = Random.Range(5, 20);
         if (Physics.Raycast(ray, out hit, 100))
         {
-            // Debug.Log(hit.collider.gameObject.name); // <<< Only for Debugging purposes
-
+            photonView.RPC("ServerShootingSound", RpcTarget.AllBuffered);
             // Display hit effect to all players in room
             photonView.RPC("CreateHitEffect", RpcTarget.All, hit.point);
             // Check if collided object is Player excluding ourselves
-            if (hit.collider.gameObject.CompareTag("Player") && 
+            if (hit.collider.gameObject.CompareTag("Player") &&
                 !hit.collider.gameObject.GetComponent<PhotonView>().IsMine)
             {
-                hit.collider.gameObject.GetComponent<PhotonView>().RPC("TakeDamage", 
+                hit.collider.gameObject.GetComponent<PhotonView>().RPC("TakeDamage",
                     RpcTarget.AllBuffered, (float)randomDamage);
                 photonView.RPC("CreateBloodEffect", RpcTarget.All, hit.point);
             }
         }
     }
 
+    #endregion
+
     #region PunRPC Methods
+
+    [PunRPC]
+    public void ServerShootingSound()
+    {
+        shootingSound.Play();
+    }
+
 
     [PunRPC]
     public void TakeDamage(float damage, PhotonMessageInfo info)

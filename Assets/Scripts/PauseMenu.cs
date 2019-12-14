@@ -29,7 +29,6 @@ public class PauseMenu : MonoBehaviour
     public void OnHomeButtonClick()
     {
         pausePanel.SetActive(false);
-        PhotonNetwork.LeaveRoom();
         PhotonNetwork.Disconnect();
         PhotonNetwork.LoadLevel("LobbyScene");
         PhotonNetwork.ReconnectAndRejoin();

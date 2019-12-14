@@ -23,10 +23,18 @@ public class PlayerSetup : MonoBehaviourPunCallbacks
         HandleRelevantView();
     }
 
+    private void Update()
+    {
+
+    }
+    
     private void InitialSetup()
     {
         // To avoid multiple audio listener in one scene warning
-        FindObjectOfType<Camera>().GetComponent<AudioListener>().enabled = false;
+        if (!photonView.IsMine)
+        {
+            FindObjectOfType<Camera>().GetComponent<AudioListener>().enabled = false;
+        }
         shooter = GetComponent<Shooting>();
         playerMovementController = GetComponent<PlayerMovementController>();
         animator = GetComponent<Animator>();

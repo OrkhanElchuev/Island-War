@@ -35,5 +35,7 @@ MonoBehaviour:
   - CreateHitEffect
   - RestoreHealth
   - CreateBloodEffect
+  - Server_DoSound
+  - ServerShootingSound
   DisableAutoOpenWizard: 1
   ShowSettings: 1
