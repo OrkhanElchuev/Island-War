@@ -43,7 +43,7 @@ Also to improve in 3D level creation in Unity and handle movement control for mo
 - E-mail address orkhan.elchuev@gmail.com
 - https://github.com/OrkhanElchuev/Island-War
 
-## Aknowledgements
+## Acknowledgements
 - [dafont](https://www.dafont.com/de/)
 - [LunaPic](https://www6.lunapic.com/editor/)
 - [Wallpaper](https://wallpapercave.com/w/wp1943821)
