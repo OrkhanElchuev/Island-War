@@ -40,20 +40,20 @@ public class PlayerMovementScript : MonoBehaviour {
 	* If player leaves keys it will deaccelerate
 	*/
 	void PlayerMovementLogic(){
-		currentSpeed = rb.velocity.magnitude;
-		horizontalMovement = new Vector2 (rb.velocity.x, rb.velocity.z);
+		currentSpeed = rb.linearVelocity.magnitude;
+		horizontalMovement = new Vector2 (rb.linearVelocity.x, rb.linearVelocity.z);
 		if (horizontalMovement.magnitude > maxSpeed){
 			horizontalMovement = horizontalMovement.normalized;
 			horizontalMovement *= maxSpeed;    
 		}
-		rb.velocity = new Vector3 (
+		rb.linearVelocity = new Vector3 (
 			horizontalMovement.x,
-			rb.velocity.y,
+			rb.linearVelocity.y,
 			horizontalMovement.y
 		);
 		if (grounded){
-			rb.velocity = Vector3.SmoothDamp(rb.velocity,
-				new Vector3(0,rb.velocity.y,0),
+			rb.linearVelocity = Vector3.SmoothDamp(rb.linearVelocity,
+				new Vector3(0,rb.linearVelocity.y,0),
 				ref slowdownV,
 				deaccelerationSpeed);
 		}
