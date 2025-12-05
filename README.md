@@ -38,7 +38,6 @@ Also to improve in 3D level creation in Unity and handle movement control for mo
 
 ## Known Bugs
 - Shooting and Dying sound effects are not produced properly.
-- The body of a weapon does not follow the aim, meanwhile shooting works correctly. Following the aim was not implemented.
 
 ## Contacts 
 - E-mail address orkhan.elchuev@gmail.com
