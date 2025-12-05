@@ -1,8 +1,15 @@
 [Ll]ibrary/
+[Ll]ibrary/**/*.meta
 [Tt]emp/
+[Tt]emp/**/*.meta
 [Oo]bj/
+[Oo]bj/**/*.meta
 [Bb]uild/
+[Bb]uild/**/*.meta
 [Bb]uilds/
+[Bb]uilds/**/*.meta
+UserSettings/
+UserSettings/**/*.meta
 Assets/AssetStoreTools*
 
 # Visual studio code cache directory
@@ -32,6 +39,7 @@ ExportedObj/
 *.booproj
 *.svd
 *.pdb
+*.meta
 
 # Unity 3D generated meta files
 *.pidb.meta

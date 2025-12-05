@@ -7,85 +7,81 @@ using UnityEngine.UI;
 
 public class PlayerSetup : MonoBehaviourPunCallbacks
 {
-    public GameObject[] FPS_HandsChildGameObjects;
-    public GameObject[] SoldierChildGameObjects;
-    public GameObject playerUIPrefab;
-    public Camera FPSCamera;
+  public GameObject[] FPS_HandsChildGameObjects;
+  public GameObject[] SoldierChildGameObjects;
+  public GameObject playerUIPrefab;
+  public Camera FPSCamera;
 
-    private PlayerMovementController playerMovementController;
-    private Animator animator;
-    private Shooting shooter;
+  private PlayerMovementController playerMovementController;
+  private Animator animator;
+  private Shooting shooter;
 
-    // Start is called before the first frame update
-    void Start()
+  void Start()
+  {
+    InitialSetup();
+    HandleRelevantView();
+  }
+
+  private void Update()
+  {
+    // To avoid "multiple audio listener" warning
+    if (!photonView.IsMine)
     {
-        InitialSetup();
-        HandleRelevantView();
+      FindObjectOfType<Camera>().GetComponent<AudioListener>().enabled = false;
     }
+  }
 
-    private void Update()
+  private void InitialSetup()
+  {
+    shooter = GetComponent<Shooting>();
+    playerMovementController = GetComponent<PlayerMovementController>();
+    animator = GetComponent<Animator>();
+  }
+
+  private void HandleRelevantView()
+  {
+    if (photonView.IsMine)
     {
-        // To avoid multiple audio listener in one scene warning
-        if (!photonView.IsMine)
-        {
-            FindObjectOfType<Camera>().GetComponent<AudioListener>().enabled = false;
-        }
-    }
+      foreach (GameObject go in FPS_HandsChildGameObjects)
+      {
+        go.SetActive(true);
 
-    private void InitialSetup()
+        // make this weapon/hand object follow the camera
+        var follow = go.AddComponent<GunFollowCamera>();
+        follow.Init(FPSCamera);
+      }
+
+      foreach (GameObject go in SoldierChildGameObjects)
+        go.SetActive(false);
+
+      GameObject playerUIGameObject = Instantiate(playerUIPrefab);
+
+      playerMovementController.joystick =
+          playerUIGameObject.transform.Find("Fixed Joystick").GetComponent<Joystick>();
+
+      playerMovementController.fixedTouchField =
+          playerUIGameObject.transform.Find("RotationTouchPanel").GetComponent<FixedTouchField>();
+
+      playerUIGameObject.transform.Find("Shoot")
+          .GetComponent<UnityEngine.UI.Button>().onClick.AddListener(() => shooter.Attack());
+
+      FPSCamera.enabled = true;
+      animator.SetBool("IsPlayerModel", false);
+    }
+    else
     {
-        shooter = GetComponent<Shooting>();
-        playerMovementController = GetComponent<PlayerMovementController>();
-        animator = GetComponent<Animator>();
+      foreach (GameObject go in FPS_HandsChildGameObjects)
+        go.SetActive(false);
+
+      foreach (GameObject go in SoldierChildGameObjects)
+        go.SetActive(true);
+
+      playerMovementController.enabled = false;
+      GetComponent<UnityStandardAssets.Characters.FirstPerson.
+                  RigidbodyFirstPersonController>().enabled = false;
+      FPSCamera.enabled = false;
+
+      animator.SetBool("IsPlayerModel", true);
     }
-
-    private void HandleRelevantView()
-    {
-        // For us show only hand and gun (deactivate body model)
-        if (photonView.IsMine)
-        {
-            foreach (GameObject gameObject in FPS_HandsChildGameObjects)
-            {
-                gameObject.SetActive(true);
-            }
-
-            foreach (GameObject gameObject in SoldierChildGameObjects)
-            {
-                gameObject.SetActive(false);
-            }
-
-            // Instantiate Player UI only for myself
-            GameObject playerUIGameObject = Instantiate(playerUIPrefab);
-            // Assign Joystick and player rotation field
-            playerMovementController.joystick =
-                playerUIGameObject.transform.Find("Fixed Joystick").GetComponent<Joystick>();
-            playerMovementController.fixedTouchField =
-                playerUIGameObject.transform.Find("RotationTouchPanel").GetComponent<FixedTouchField>();
-            playerUIGameObject.transform.Find("Shoot").GetComponent<Button>().onClick.AddListener(() => shooter.Attack());
-
-            FPSCamera.enabled = true;
-            // Set hand model animation
-            animator.SetBool("IsPlayerModel", false);
-        }
-        // For the rest of the players show our body model 
-        else
-        {
-            foreach (GameObject gameObject in FPS_HandsChildGameObjects)
-            {
-                gameObject.SetActive(false);
-            }
-
-            foreach (GameObject gameObject in SoldierChildGameObjects)
-            {
-                gameObject.SetActive(true);
-            }
-
-            // Disable joystick components and camera 
-            playerMovementController.enabled = false;
-            GetComponent<RigidbodyFirstPersonController>().enabled = false;
-            FPSCamera.enabled = false;
-            // Set Player model animation
-            animator.SetBool("IsPlayerModel", true);
-        }
-    }
+  }
 }
